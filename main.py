@@ -1,26 +1,37 @@
+
 import json
 import os
 
-FILE_NAME = "student.json"
+FILE_NAME = "students.json"
+
+# -----------------------------
+# DATA PERSISTENCE FUNCTIONS
+# -----------------------------
 
 def load_students():
+    """Load students from JSON file"""
     if os.path.exists(FILE_NAME):
         with open(FILE_NAME, "r") as file:
             return json.load(file)
-        return []
-    
+    return []
+
 def save_students(students):
+    """Save students to JSON file"""
     with open(FILE_NAME, "w") as file:
         json.dump(students, file, indent=4)
 
+# -----------------------------
+# CRUD FUNCTIONS
+# -----------------------------
 
 def add_student(students):
+    """Register a new student"""
     try:
         student_id = input("Enter ID: ")
         name = input("Enter name: ")
         age = int(input("Enter age: "))
-        course = int(input("Enter course: "))
-        status = input("Enter status (active/inactive)")
+        course = input("Enter course: ")
+        status = input("Enter status (active/inactive): ")
 
         student = {
             "id": student_id,
@@ -34,31 +45,38 @@ def add_student(students):
         print("Student added successfully!")
 
     except ValueError:
-        print("ERROR: Age must be a number.")
+        print("Error: Age must be a number.")
 
 def show_students(students):
+    """Display all students"""
     if not students:
-        print("No student registered.")
+        print("No students registered.")
         return
+
     for student in students:
         print(student)
 
 def find_student(students):
+    """Find a student by ID"""
     student_id = input("Enter ID to search: ")
+
     for student in students:
         if student["id"] == student_id:
-             print(student)
-        return student
+            print(student)
+            return student
+
     print("Student not found.")
     return None
 
-def update_students(students):
+def update_student(students):
+    """Update student information"""
     student = find_student(students)
+
     if student:
-        print("Leave blank to keep vurrent value")
+        print("Leave blank to keep current value")
 
         name = input("New name: ")
-        age = input("Nex age: ")
+        age = input("New age: ")
         course = input("New course: ")
         status = input("New status: ")
 
@@ -73,35 +91,45 @@ def update_students(students):
             student["course"] = course
         if status:
             student["status"] = status
-            print("The student successfully updated!")
+
+        print("Student updated successfully!")
 
 def delete_student(students):
+    """Delete a student by ID"""
     student_id = input("Enter ID to delete: ")
+
     for student in students:
         if student["id"] == student_id:
             students.remove(student)
+            print("Student deleted successfully!")
             return
-        print("Student not found.")
-# -------------------------------------------------------------------
+
+    print("Student not found.")
+
+# -----------------------------
 # MENU FUNCTION
-# -------------------------------------------------------------------
+# -----------------------------
 
 def menu():
+    """Display menu options"""
     options = (
         "1. Add Student",
         "2. Show Students",
-        "3. Find student",
+        "3. Find Student",
         "4. Update Student",
         "5. Delete Student",
-        "6. EXIT"
+        "6. Exit"
     )
+
     print("\n--- STUDENT MANAGEMENT SYSTEM ---")
     for option in options:
         print(option)
+
     return input("Choose an option: ")
-# -------------------------------------------------------------------
-# MAIN FUNTION
-# -------------------------------------------------------------------
+
+# -----------------------------
+# MAIN FUNCTION
+# -----------------------------
 
 def main():
     students = load_students()
@@ -109,6 +137,7 @@ def main():
 
     while choice != "6":
         choice = menu()
+
         if choice == "1":
             add_student(students)
         elif choice == "2":
@@ -116,7 +145,7 @@ def main():
         elif choice == "3":
             find_student(students)
         elif choice == "4":
-            update_students(students)
+            update_student(students)
         elif choice == "5":
             delete_student(students)
         elif choice == "6":
@@ -124,7 +153,7 @@ def main():
             print("Data saved. Goodbye!")
         else:
             print("Invalid option. Try again.")
+
+# Run program
 main()
             
-        
-
